@@ -30,6 +30,25 @@ const p2Inputs: Dictionary = {
 
 var player_inputs: Dictionary = {}
 
+var motion_inputs: Dictionary = {
+	"QCF": [2,3,6],
+	"QCB": [2,1,4],
+	"DP": [6,2,3],
+	"HCF": [4, 1, 2, 3, 6],
+	"FDash": [6, 6],
+	"BDash": [4, 4]
+}
+
+# Input buffering
+var input_buffer: Array = []
+var buffer_timer:float = 0.3
+var curr_directional_input:  Vector2 = Vector2(0, 0)
+var prev_directional_input:  Vector2 = Vector2(0, 0)
+@onready var buffering_timer = $InputBufferTimer
+
+# For testing
+@onready var input_type_label: Label = $Label 
+
 func _ready() -> void:
 	if is_player_one:
 		player_inputs = p1Inputs
@@ -37,10 +56,6 @@ func _ready() -> void:
 	else:
 		player_inputs = p2Inputs
 		opponent_node = player_one_node
-
-	print("For the node " + name)
-	print(opponent_node)
-	print("===")
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -51,18 +66,33 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed(player_inputs.up) and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
+	# For basic movement
 	handle_character_movement()
-	# handle_facing_direction()
-
+	handle_facing_direction()
 	move_and_slide()
 
+	# For basic input buffering
+	handle_input_buffering()
+	prune_buffer()
+	
+	# Basic Motion Inputs
+	if match_motion(motion_inputs["FDash"]):
+		input_type_label.set_text("Forward Dash")
+	elif match_motion(motion_inputs["BDash"]):
+		input_type_label.set_text("Back Dash")
+	else:
+		input_type_label.set_text("Neutral")
+
+# Handles basic character movement
 func handle_character_movement() -> void:
 	var direction := Input.get_axis(player_inputs.back, player_inputs.forward)
+	
 	if direction:
 		velocity.x = direction * SPEED
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
+# Changes character facing direction based on opponent's position
 func handle_facing_direction() -> void:
 	if position.x < opponent_node.position.x:
 		is_facing_right = true
@@ -70,3 +100,52 @@ func handle_facing_direction() -> void:
 	else:
 		is_facing_right = false
 		sprite_2d.flip_h = true
+
+# Handles the input buffering for special moves
+func handle_input_buffering() -> void:
+	var left_right := Input.get_axis(player_inputs.back, player_inputs.forward)
+	var up_down := Input.get_axis(player_inputs.down, player_inputs.up)
+
+	# Set proper direction, taking in account where player is facing
+	curr_directional_input = Vector2(left_right, up_down) if is_facing_right else Vector2(left_right * -1, up_down)
+
+	# Convert to numpad notation
+	var numpad_direction_convertion: int = 0
+
+	if curr_directional_input == Vector2(-1,-1): numpad_direction_convertion = 1
+	if curr_directional_input == Vector2(0,-1): numpad_direction_convertion = 2
+	if curr_directional_input == Vector2(1,-1): numpad_direction_convertion = 3
+	if curr_directional_input == Vector2(-1,0): numpad_direction_convertion = 4
+	if curr_directional_input == Vector2(0,0): numpad_direction_convertion = 0
+	if curr_directional_input == Vector2(1,0): numpad_direction_convertion = 6
+	if curr_directional_input == Vector2(-1,1): numpad_direction_convertion = 7
+	if curr_directional_input == Vector2(0,1): numpad_direction_convertion = 8
+	if curr_directional_input == Vector2(1,1): numpad_direction_convertion = 9
+
+	if prev_directional_input == curr_directional_input:
+		return
+	else: 
+		prev_directional_input = curr_directional_input
+
+		if numpad_direction_convertion != 0:
+			input_buffer.append({ "dir": numpad_direction_convertion, "time": Time.get_ticks_msec() })
+
+# Helper function to clean inputs from buffered list
+func prune_buffer() -> void:
+	var now = Time.get_ticks_msec()
+
+	input_buffer = input_buffer.filter(func(entry):
+		return now - entry.time < buffer_timer * 1000
+	)
+
+func match_motion(motion: Array) -> bool:
+	var index = 0
+
+	for entry in input_buffer:
+		if entry.dir == motion[index]:
+			index += 1
+
+			if index >= motion.size():
+				return true
+
+	return false

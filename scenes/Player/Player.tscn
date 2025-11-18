@@ -15,3 +15,10 @@ shape = SubResource("RectangleShape2D_c5pbs")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_bvqhm")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -23.0
+offset_top = -42.0
+offset_right = 19.0
+offset_bottom = -19.0
+text = "Input"
