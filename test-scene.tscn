@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://dgfhfviuhyq4g"]
+
+[ext_resource type="PackedScene" uid="uid://b42is2rsq8282" path="res://scenes/Player/Player.tscn" id="1_0411k"]
+[ext_resource type="Texture2D" uid="uid://dkq2dhpssbxob" path="res://icon.svg" id="2_wn8ut"]
+[ext_resource type="PackedScene" uid="uid://dqxxj30jhla8e" path="res://scenes/GameManagementScenes/GameManager/game_manager.tscn" id="3_8amj3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8amj3"]
+size = Vector2(127, 120)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Player1" parent="." instance=ExtResource("1_0411k")]
+position = Vector2(167, 212)
+
+[node name="Player2" parent="." instance=ExtResource("1_0411k")]
+position = Vector2(536, 208)
+is_player_one = false
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(379, 278)
+scale = Vector2(5, 0.5)
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+texture = ExtResource("2_wn8ut")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-0.0999985, 2)
+shape = SubResource("RectangleShape2D_8amj3")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.5, 1.5)
+limit_left = 0
+limit_top = 0
+
+[node name="GameManager" parent="." instance=ExtResource("3_8amj3")]
