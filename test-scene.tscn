@@ -10,7 +10,7 @@ size = Vector2(127, 120)
 [node name="Node2D" type="Node2D"]
 
 [node name="Player1" parent="." instance=ExtResource("1_0411k")]
-position = Vector2(167, 212)
+position = Vector2(172, 222)
 
 [node name="Player2" parent="." instance=ExtResource("1_0411k")]
 position = Vector2(536, 208)
@@ -28,7 +28,7 @@ position = Vector2(-0.0999985, 2)
 shape = SubResource("RectangleShape2D_8amj3")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(1.5, 1.5)
+zoom = Vector2(2, 2)
 limit_left = 0
 limit_top = 0
 

@@ -1,20 +1,34 @@
-[gd_scene load_steps=4 format=3 uid="uid://b42is2rsq8282"]
+[gd_scene load_steps=13 format=3 uid="uid://b42is2rsq8282"]
 
 [ext_resource type="Script" uid="uid://pk5odqkytgqf" path="res://scenes/Player/scripts/player_controller.gd" id="1_ky53y"]
 [ext_resource type="Texture2D" uid="uid://c75ta2h4dvv51" path="res://assets/chracter-placeholder.png" id="2_bvqhm"]
+[ext_resource type="Script" uid="uid://dsl78sa4r2va0" path="res://scenes/Player/scripts/state_machine.gd" id="3_ved6o"]
+[ext_resource type="Script" uid="uid://bxnvgq4dhmnph" path="res://scenes/Player/scripts/ground_state.gd" id="4_socpp"]
+[ext_resource type="Script" uid="uid://bw55tq8yxuk8o" path="res://scenes/Player/scripts/jump_state.gd" id="5_socpp"]
+[ext_resource type="Script" uid="uid://bb6xyehby4fn4" path="res://scenes/Player/scripts/falling_state.gd" id="6_fxc31"]
+[ext_resource type="Script" uid="uid://sfg550twckkp" path="res://scenes/Player/scripts/forward_dash_state.gd" id="7_fxc31"]
+[ext_resource type="Script" uid="uid://dybxmei2wnt3u" path="res://scenes/Player/scripts/back_dash_state.gd" id="8_puxyr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c5pbs"]
 size = Vector2(20, 33)
 
-[node name="BigGuy" type="CharacterBody2D"]
-script = ExtResource("1_ky53y")
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_socpp"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 0.5)
-shape = SubResource("RectangleShape2D_c5pbs")
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mmokv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_puxyr"]
+size = Vector2(14, 30)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_ky53y")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_bvqhm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_c5pbs")
 
 [node name="Label" type="Label" parent="."]
 offset_left = -23.0
@@ -22,3 +36,82 @@ offset_top = -42.0
 offset_right = 19.0
 offset_bottom = -19.0
 text = "Input"
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("player_character", "current_state", "animation_tree", "state_label")]
+script = ExtResource("3_ved6o")
+player_character = NodePath("..")
+current_state = NodePath("Ground")
+animation_tree = NodePath("../BigGuyAnim/AnimationTree")
+state_label = NodePath("../Label")
+
+[node name="Ground" type="Node" parent="StateMachine" node_paths=PackedStringArray("jump_state", "falling_state", "f_dash_state", "b_dash_state")]
+script = ExtResource("4_socpp")
+jump_state = NodePath("../Jump")
+falling_state = NodePath("../Falling")
+f_dash_state = NodePath("../ForwardDash")
+b_dash_state = NodePath("../BackDash")
+metadata/_custom_type_script = "uid://dc1su2sa0sebm"
+
+[node name="Jump" type="Node" parent="StateMachine" node_paths=PackedStringArray("falling_state")]
+script = ExtResource("5_socpp")
+falling_state = NodePath("../Falling")
+can_move = false
+metadata/_custom_type_script = "uid://dc1su2sa0sebm"
+
+[node name="Falling" type="Node" parent="StateMachine" node_paths=PackedStringArray("landing_state")]
+script = ExtResource("6_fxc31")
+landing_state = NodePath("../Ground")
+can_move = false
+metadata/_custom_type_script = "uid://dc1su2sa0sebm"
+
+[node name="ForwardDash" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "dash_timer")]
+script = ExtResource("7_fxc31")
+ground_state = NodePath("../Ground")
+dash_timer = NodePath("../../FDashTimer")
+can_move = false
+metadata/_custom_type_script = "uid://dc1su2sa0sebm"
+
+[node name="BackDash" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "dash_timer")]
+script = ExtResource("8_puxyr")
+ground_state = NodePath("../Ground")
+dash_timer = NodePath("../../BDashTimer")
+can_move = false
+metadata/_custom_type_script = "uid://dc1su2sa0sebm"
+
+[node name="BigGuyAnim" type="Node" parent="."]
+
+[node name="AnimationTree" type="AnimationTree" parent="BigGuyAnim"]
+root_node = NodePath(".")
+tree_root = SubResource("AnimationNodeStateMachine_socpp")
+anim_player = NodePath("../AnimationPlayer")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="BigGuyAnim"]
+root_node = NodePath("../AnimationTree")
+
+[node name="FDashTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="BDashTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="HitBoxes" type="Node" parent="."]
+
+[node name="Area2D" type="Area2D" parent="HitBoxes"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Area2D"]
+position = Vector2(13, 0)
+shape = SubResource("RectangleShape2D_mmokv")
+debug_color = Color(0.921157, 0.200782, 0.494826, 0.42)
+
+[node name="HurtBoxes" type="Node" parent="."]
+
+[node name="Area2D" type="Area2D" parent="HurtBoxes"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBoxes/Area2D"]
+shape = SubResource("RectangleShape2D_puxyr")
+debug_color = Color(0.185825, 0.555695, 0.860575, 0.42)
+
+[connection signal="timeout" from="FDashTimer" to="StateMachine/ForwardDash" method="_on_dash_timer_timeout"]
+[connection signal="timeout" from="FDashTimer" to="StateMachine/ForwardDash" method="_on_f_dash_timer_timeout"]
+[connection signal="timeout" from="BDashTimer" to="StateMachine/ForwardDash" method="_on_dash_timer_timeout"]
+[connection signal="timeout" from="BDashTimer" to="StateMachine/BackDash" method="_on_b_dash_timer_timeout"]

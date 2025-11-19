@@ -1,11 +1,13 @@
 extends CharacterBody2D
 
 # Movement Vars
-const SPEED = 300.0
+const SPEED = 100.0
 const JUMP_VELOCITY = -400.0
 
 @export var is_facing_right: bool = true
 @onready var sprite_2d: Sprite2D = $Sprite2D
+
+@onready var state_machine: PlayerStateMachine = $StateMachine
 
 # Define if player one
 @export var is_player_one: bool = true
@@ -41,7 +43,7 @@ var motion_inputs: Dictionary = {
 
 # Input buffering
 var input_buffer: Array = []
-var buffer_timer:float = 0.3
+var buffer_timer:float = 0.5
 var curr_directional_input:  Vector2 = Vector2(0, 0)
 var prev_directional_input:  Vector2 = Vector2(0, 0)
 @onready var buffering_timer = $InputBufferTimer
@@ -62,10 +64,6 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	# Handle jump.
-	if Input.is_action_just_pressed(player_inputs.up) and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
 	# For basic movement
 	handle_character_movement()
 	handle_facing_direction()
@@ -74,23 +72,16 @@ func _physics_process(delta: float) -> void:
 	# For basic input buffering
 	handle_input_buffering()
 	prune_buffer()
-	
-	# Basic Motion Inputs
-	if match_motion(motion_inputs["FDash"]):
-		input_type_label.set_text("Forward Dash")
-	elif match_motion(motion_inputs["BDash"]):
-		input_type_label.set_text("Back Dash")
-	else:
-		input_type_label.set_text("Neutral")
 
 # Handles basic character movement
 func handle_character_movement() -> void:
 	var direction := Input.get_axis(player_inputs.back, player_inputs.forward)
 	
-	if direction:
+	if direction and state_machine.current_state.can_move:
 		velocity.x = direction * SPEED
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+		if state_machine.current_state.name == "Ground":
+			velocity.x = move_toward(velocity.x, 0, SPEED)
 
 # Changes character facing direction based on opponent's position
 func handle_facing_direction() -> void:
