@@ -3,6 +3,7 @@ extends PlayerState
 @export var jump_speed:float = -400.0
 
 @export var jump_state: PlayerState
+@export var attack_state: PlayerState
 @export var falling_state: PlayerState
 @export var f_dash_state: PlayerState
 @export var b_dash_state: PlayerState
@@ -20,6 +21,10 @@ func state_input(event : InputEvent):
 
 	if character.match_motion(character.motion_inputs["BDash"]):
 		next_state = b_dash_state
+
+	if character.match_motion(character.motion_inputs["QCF"]) and Input.is_action_just_pressed(character.player_inputs.l):
+		next_state = attack_state
+		next_state.attack_type = "l_attack_1"
 
 func jump(_event : InputEvent):
 	var jump_velocity = jump_speed

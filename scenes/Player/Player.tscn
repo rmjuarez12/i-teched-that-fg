@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://b42is2rsq8282"]
+[gd_scene load_steps=14 format=3 uid="uid://b42is2rsq8282"]
 
 [ext_resource type="Script" uid="uid://pk5odqkytgqf" path="res://scenes/Player/scripts/player_controller.gd" id="1_ky53y"]
 [ext_resource type="Texture2D" uid="uid://c75ta2h4dvv51" path="res://assets/chracter-placeholder.png" id="2_bvqhm"]
@@ -8,19 +8,19 @@
 [ext_resource type="Script" uid="uid://bb6xyehby4fn4" path="res://scenes/Player/scripts/falling_state.gd" id="6_fxc31"]
 [ext_resource type="Script" uid="uid://sfg550twckkp" path="res://scenes/Player/scripts/forward_dash_state.gd" id="7_fxc31"]
 [ext_resource type="Script" uid="uid://dybxmei2wnt3u" path="res://scenes/Player/scripts/back_dash_state.gd" id="8_puxyr"]
+[ext_resource type="PackedScene" uid="uid://dcqkqlg424txh" path="res://scenes/GameManagementScenes/HitBoxes/hitbox.tscn" id="9_dqp0f"]
+[ext_resource type="Script" uid="uid://ce0m10c0yb2fh" path="res://scenes/Player/scripts/attacking_state.gd" id="9_tl8lu"]
+[ext_resource type="PackedScene" uid="uid://co658m44208dt" path="res://scenes/GameManagementScenes/HitBoxes/hurt_box.tscn" id="10_dqp0f"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c5pbs"]
 size = Vector2(20, 33)
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_socpp"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_mmokv"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_puxyr"]
-size = Vector2(14, 30)
-
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("player_hitboxes", "player_hurtboxes")]
 script = ExtResource("1_ky53y")
+player_hitboxes = NodePath("HitBoxes")
+player_hurtboxes = NodePath("HurtBoxes")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_bvqhm")
@@ -44,9 +44,10 @@ current_state = NodePath("Ground")
 animation_tree = NodePath("../BigGuyAnim/AnimationTree")
 state_label = NodePath("../Label")
 
-[node name="Ground" type="Node" parent="StateMachine" node_paths=PackedStringArray("jump_state", "falling_state", "f_dash_state", "b_dash_state")]
+[node name="Ground" type="Node" parent="StateMachine" node_paths=PackedStringArray("jump_state", "attack_state", "falling_state", "f_dash_state", "b_dash_state")]
 script = ExtResource("4_socpp")
 jump_state = NodePath("../Jump")
+attack_state = NodePath("../Attacking")
 falling_state = NodePath("../Falling")
 f_dash_state = NodePath("../ForwardDash")
 b_dash_state = NodePath("../BackDash")
@@ -78,6 +79,13 @@ dash_timer = NodePath("../../BDashTimer")
 can_move = false
 metadata/_custom_type_script = "uid://dc1su2sa0sebm"
 
+[node name="Attacking" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "attack_timer")]
+script = ExtResource("9_tl8lu")
+ground_state = NodePath("../Ground")
+attack_timer = NodePath("../../AttackTimer")
+can_move = false
+metadata/_custom_type_script = "uid://dc1su2sa0sebm"
+
 [node name="BigGuyAnim" type="Node" parent="."]
 
 [node name="AnimationTree" type="AnimationTree" parent="BigGuyAnim"]
@@ -94,24 +102,20 @@ wait_time = 0.5
 [node name="BDashTimer" type="Timer" parent="."]
 wait_time = 0.5
 
-[node name="HitBoxes" type="Node" parent="."]
+[node name="AttackTimer" type="Timer" parent="."]
 
-[node name="Area2D" type="Area2D" parent="HitBoxes"]
+[node name="HitBoxes" type="Node2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Area2D"]
-position = Vector2(13, 0)
-shape = SubResource("RectangleShape2D_mmokv")
-debug_color = Color(0.921157, 0.200782, 0.494826, 0.42)
+[node name="Hitbox" parent="HitBoxes" instance=ExtResource("9_dqp0f")]
+position = Vector2(11, 0)
 
-[node name="HurtBoxes" type="Node" parent="."]
+[node name="HurtBoxes" type="Node2D" parent="."]
 
-[node name="Area2D" type="Area2D" parent="HurtBoxes"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBoxes/Area2D"]
-shape = SubResource("RectangleShape2D_puxyr")
-debug_color = Color(0.185825, 0.555695, 0.860575, 0.42)
+[node name="HurtBox" parent="HurtBoxes" instance=ExtResource("10_dqp0f")]
+scale = Vector2(0.72, 1.64)
 
 [connection signal="timeout" from="FDashTimer" to="StateMachine/ForwardDash" method="_on_dash_timer_timeout"]
 [connection signal="timeout" from="FDashTimer" to="StateMachine/ForwardDash" method="_on_f_dash_timer_timeout"]
 [connection signal="timeout" from="BDashTimer" to="StateMachine/ForwardDash" method="_on_dash_timer_timeout"]
 [connection signal="timeout" from="BDashTimer" to="StateMachine/BackDash" method="_on_b_dash_timer_timeout"]
+[connection signal="timeout" from="AttackTimer" to="StateMachine/Attacking" method="_on_attack_timer_timeout"]

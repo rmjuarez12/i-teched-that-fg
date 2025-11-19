@@ -9,6 +9,9 @@ const JUMP_VELOCITY = -400.0
 
 @onready var state_machine: PlayerStateMachine = $StateMachine
 
+@export var player_hitboxes: Node2D
+@export var player_hurtboxes: Node2D
+
 # Define if player one
 @export var is_player_one: bool = true
 var opponent_node: CharacterBody2D
@@ -20,14 +23,16 @@ const p1Inputs: Dictionary = {
   "forward": "p1_forward",
   "back": "p1_back",
 	"up": "p1_up",
-	"down": "p1_down"
+	"down": "p1_down",
+	"l": "p1_L"
 }
 
 const p2Inputs: Dictionary = {
 	"forward": "p2_forward",
   "back": "p2_back",
 	"up": "p2_up",
-	"down": "p2_down"
+	"down": "p2_down",
+	"l": "p2_L"
 }
 
 var player_inputs: Dictionary = {}

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://co658m44208dt"]
+
+[ext_resource type="Script" uid="uid://bkeiqllu752h7" path="res://scenes/GameManagementScenes/HitBoxes/scripts/hurt_boxes.gd" id="1_v0jxm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v0jxm"]
+
+[node name="HurtBox" type="Area2D" groups=["hurtboxes"]]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_v0jxm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_v0jxm")
+debug_color = Color(0.185825, 0.555695, 0.860575, 0.42)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color(0, 1, 1, 0.372549)
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0

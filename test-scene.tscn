@@ -10,14 +10,14 @@ size = Vector2(127, 120)
 [node name="Node2D" type="Node2D"]
 
 [node name="Player1" parent="." instance=ExtResource("1_0411k")]
-position = Vector2(172, 222)
+position = Vector2(124, 153)
 
 [node name="Player2" parent="." instance=ExtResource("1_0411k")]
-position = Vector2(536, 208)
+position = Vector2(224, 153)
 is_player_one = false
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
-position = Vector2(379, 278)
+position = Vector2(248, 208)
 scale = Vector2(5, 0.5)
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
@@ -27,9 +27,9 @@ texture = ExtResource("2_wn8ut")
 position = Vector2(-0.0999985, 2)
 shape = SubResource("RectangleShape2D_8amj3")
 
+[node name="GameManager" parent="." instance=ExtResource("3_8amj3")]
+
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
+zoom = Vector2(1.5, 1.5)
 limit_left = 0
 limit_top = 0
-
-[node name="GameManager" parent="." instance=ExtResource("3_8amj3")]
