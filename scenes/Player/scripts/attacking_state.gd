@@ -18,4 +18,4 @@ func _on_attack_timer_timeout() -> void:
 # Big guy moveset
 func bg_light_grab():
 	attack_timer.wait_time = 0.2
-	character.velocity.x = 700 if character.is_facing_right else -700
+	character.velocity.x = 200 if character.is_facing_right else -200

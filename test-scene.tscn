@@ -11,13 +11,15 @@ size = Vector2(127, 120)
 
 [node name="Player1" parent="." instance=ExtResource("1_0411k")]
 position = Vector2(124, 153)
+character_name = "Brickhouse Bruno"
 
 [node name="Player2" parent="." instance=ExtResource("1_0411k")]
 position = Vector2(224, 153)
+character_name = "Brickhouse Bruno"
 is_player_one = false
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
-position = Vector2(248, 208)
+position = Vector2(372, 247)
 scale = Vector2(5, 0.5)
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
@@ -30,6 +32,5 @@ shape = SubResource("RectangleShape2D_8amj3")
 [node name="GameManager" parent="." instance=ExtResource("3_8amj3")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(1.5, 1.5)
 limit_left = 0
 limit_top = 0

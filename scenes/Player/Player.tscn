@@ -1,7 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://b42is2rsq8282"]
+[gd_scene load_steps=25 format=3 uid="uid://b42is2rsq8282"]
 
 [ext_resource type="Script" uid="uid://pk5odqkytgqf" path="res://scenes/Player/scripts/player_controller.gd" id="1_ky53y"]
-[ext_resource type="Texture2D" uid="uid://c75ta2h4dvv51" path="res://assets/chracter-placeholder.png" id="2_bvqhm"]
+[ext_resource type="Texture2D" uid="uid://d0760wtjlprbr" path="res://assets/gib-guy.png" id="2_tl8lu"]
 [ext_resource type="Script" uid="uid://dsl78sa4r2va0" path="res://scenes/Player/scripts/state_machine.gd" id="3_ved6o"]
 [ext_resource type="Script" uid="uid://bxnvgq4dhmnph" path="res://scenes/Player/scripts/ground_state.gd" id="4_socpp"]
 [ext_resource type="Script" uid="uid://bw55tq8yxuk8o" path="res://scenes/Player/scripts/jump_state.gd" id="5_socpp"]
@@ -11,11 +11,168 @@
 [ext_resource type="PackedScene" uid="uid://dcqkqlg424txh" path="res://scenes/GameManagementScenes/HitBoxes/hitbox.tscn" id="9_dqp0f"]
 [ext_resource type="Script" uid="uid://ce0m10c0yb2fh" path="res://scenes/Player/scripts/attacking_state.gd" id="9_tl8lu"]
 [ext_resource type="PackedScene" uid="uid://co658m44208dt" path="res://scenes/GameManagementScenes/HitBoxes/hurt_box.tscn" id="10_dqp0f"]
+[ext_resource type="Texture2D" uid="uid://bvlqalu3b5gyw" path="res://scenes/Player/assets/brickhouse-bruno/big-guy-idle.png" id="10_qt7jd"]
+[ext_resource type="Texture2D" uid="uid://bfe5di5yyckgk" path="res://scenes/Player/assets/brickhouse-bruno/big-guy-walk.png" id="11_cd157"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c5pbs"]
-size = Vector2(20, 33)
+size = Vector2(20, 113)
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_cd157"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8djf2"]
+animation = &"walk"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lbts4"]
+animation = &"walk"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_dqefj"]
+blend_point_0/node = SubResource("AnimationNodeAnimation_cd157")
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource("AnimationNodeAnimation_8djf2")
+blend_point_1/pos = 1.0
+blend_point_2/node = SubResource("AnimationNodeAnimation_lbts4")
+blend_point_2/pos = -1.0
+blend_mode = 1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cd157"]
+advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_socpp"]
+states/Move/node = SubResource("AnimationNodeBlendSpace1D_dqefj")
+states/Move/position = Vector2(371, 100)
+transitions = ["Start", "Move", SubResource("AnimationNodeStateMachineTransition_cd157")]
+graph_offset = Vector2(-29, -57)
+
+[sub_resource type="Animation" id="Animation_tl8lu"]
+resource_name = "idle"
+length = 1.1
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../../Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("10_qt7jd")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../../Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [11]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../../Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+}
+
+[sub_resource type="Animation" id="Animation_cd157"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../../Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_tl8lu")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../../Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../../Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_8djf2"]
+resource_name = "walk"
+length = 0.9
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../../Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("11_cd157")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../../Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [9]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../../Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qt7jd"]
+_data = {
+&"RESET": SubResource("Animation_cd157"),
+&"idle": SubResource("Animation_tl8lu"),
+&"walk": SubResource("Animation_8djf2")
+}
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("player_hitboxes", "player_hurtboxes")]
 script = ExtResource("1_ky53y")
@@ -23,7 +180,7 @@ player_hitboxes = NodePath("HitBoxes")
 player_hurtboxes = NodePath("HurtBoxes")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_bvqhm")
+texture = ExtResource("2_tl8lu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
@@ -32,16 +189,16 @@ shape = SubResource("RectangleShape2D_c5pbs")
 
 [node name="Label" type="Label" parent="."]
 offset_left = -23.0
-offset_top = -42.0
+offset_top = -84.0
 offset_right = 19.0
-offset_bottom = -19.0
+offset_bottom = -61.0
 text = "Input"
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("player_character", "current_state", "animation_tree", "state_label")]
 script = ExtResource("3_ved6o")
 player_character = NodePath("..")
 current_state = NodePath("Ground")
-animation_tree = NodePath("../BigGuyAnim/AnimationTree")
+animation_tree = NodePath("../BigGuyAnim/BGAnimationTree")
 state_label = NodePath("../Label")
 
 [node name="Ground" type="Node" parent="StateMachine" node_paths=PackedStringArray("jump_state", "attack_state", "falling_state", "f_dash_state", "b_dash_state")]
@@ -88,13 +245,17 @@ metadata/_custom_type_script = "uid://dc1su2sa0sebm"
 
 [node name="BigGuyAnim" type="Node" parent="."]
 
-[node name="AnimationTree" type="AnimationTree" parent="BigGuyAnim"]
+[node name="BGAnimationTree" type="AnimationTree" parent="BigGuyAnim"]
 root_node = NodePath(".")
 tree_root = SubResource("AnimationNodeStateMachine_socpp")
-anim_player = NodePath("../AnimationPlayer")
+anim_player = NodePath("../BGAnimationPlayer")
+parameters/Move/blend_position = 0
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="BigGuyAnim"]
-root_node = NodePath("../AnimationTree")
+[node name="BGAnimationPlayer" type="AnimationPlayer" parent="BigGuyAnim"]
+root_node = NodePath("../BGAnimationTree")
+libraries = {
+&"": SubResource("AnimationLibrary_qt7jd")
+}
 
 [node name="FDashTimer" type="Timer" parent="."]
 wait_time = 0.5
@@ -107,15 +268,16 @@ wait_time = 0.5
 [node name="HitBoxes" type="Node2D" parent="."]
 
 [node name="Hitbox" parent="HitBoxes" instance=ExtResource("9_dqp0f")]
-position = Vector2(11, 0)
+position = Vector2(19, 0)
+scale = Vector2(2.24, 4.48)
 
 [node name="HurtBoxes" type="Node2D" parent="."]
 
 [node name="HurtBox" parent="HurtBoxes" instance=ExtResource("10_dqp0f")]
-scale = Vector2(0.72, 1.64)
+scale = Vector2(2.52, 5.76)
 
-[connection signal="timeout" from="FDashTimer" to="StateMachine/ForwardDash" method="_on_dash_timer_timeout"]
 [connection signal="timeout" from="FDashTimer" to="StateMachine/ForwardDash" method="_on_f_dash_timer_timeout"]
+[connection signal="timeout" from="FDashTimer" to="StateMachine/ForwardDash" method="_on_dash_timer_timeout"]
 [connection signal="timeout" from="BDashTimer" to="StateMachine/ForwardDash" method="_on_dash_timer_timeout"]
 [connection signal="timeout" from="BDashTimer" to="StateMachine/BackDash" method="_on_b_dash_timer_timeout"]
 [connection signal="timeout" from="AttackTimer" to="StateMachine/Attacking" method="_on_attack_timer_timeout"]

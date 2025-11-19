@@ -16,15 +16,17 @@ func state_input(event : InputEvent):
 	if(event.is_action_pressed(character.player_inputs.up) and can_move):
 		jump(event)
 
-	if character.match_motion(character.motion_inputs["FDash"]):
-		next_state = f_dash_state
+	var action = character.dispatch_actions()
 
-	if character.match_motion(character.motion_inputs["BDash"]):
-		next_state = b_dash_state
+	print(action)
 
-	if character.match_motion(character.motion_inputs["QCF"]) and Input.is_action_just_pressed(character.player_inputs.l):
+	if action == "Pretzel" and Input.is_action_just_pressed(character.player_inputs.l):
 		next_state = attack_state
 		next_state.attack_type = "l_attack_1"
+	# elif character.match_motion(character.motion_inputs["FDash"]):
+	# 	next_state = f_dash_state
+	# elif character.match_motion(character.motion_inputs["BDash"]):
+	# 	next_state = b_dash_state
 
 func jump(_event : InputEvent):
 	var jump_velocity = jump_speed

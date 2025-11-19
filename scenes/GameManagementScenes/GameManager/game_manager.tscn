@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://dqxxj30jhla8e"]
+[gd_scene load_steps=3 format=3 uid="uid://dqxxj30jhla8e"]
 
 [ext_resource type="Script" uid="uid://c2f1wiyvac535" path="res://scenes/GameManagementScenes/GameManager/scripts/game_manager.gd" id="1_w5sip"]
+[ext_resource type="Script" uid="uid://duehas1a1g7fd" path="res://scenes/GameManagementScenes/GameManager/scripts/input_history.gd" id="2_bqtm0"]
 
 [node name="GameManager" type="Node"]
 script = ExtResource("1_w5sip")
+
+[node name="InputHistory" type="Node2D" parent="."]
+script = ExtResource("2_bqtm0")
