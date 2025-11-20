@@ -60,7 +60,8 @@ func add_to_history(directional_input: int, normal_input: String, player_one: bo
 		if normal_input != player_1_last_normal_input:
 			player_1_last_normal_input = normal_input
 
-			player_1_history.append(normal_input)
+			if normal_input != "":
+				player_1_history.append(normal_input)
 	else:
 		if player_2_last_directional_input != directional_input:
 			player_2_last_directional_input = directional_input
@@ -74,7 +75,8 @@ func add_to_history(directional_input: int, normal_input: String, player_one: bo
 		if normal_input != player_2_last_normal_input:
 			player_2_last_normal_input = normal_input
 
-			player_2_history.append(normal_input)
+			if normal_input != "":
+				player_2_history.append(normal_input)
 
 # Helper to choose what Icon to use
 func define_arrow_string(direction: int):

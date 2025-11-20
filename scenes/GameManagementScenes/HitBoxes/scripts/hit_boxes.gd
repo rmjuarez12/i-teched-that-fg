@@ -13,7 +13,7 @@ func _ready() -> void:
 			push_error("Child node is not an Area2D: " + child.name)
 
 func _process(_delta: float) -> void:
-	if hitbox_parent.state_machine.current_state.name == "Attacking":
+	if hitbox_parent.state_machine.current_state.name == "Attacking" and hitbox_parent.state_machine.current_state.attack == true:
 		toggle_hitboxes(true)
 	else:
 		toggle_hitboxes(false)

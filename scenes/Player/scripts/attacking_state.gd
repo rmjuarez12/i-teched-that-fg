@@ -1,21 +1,67 @@
 extends PlayerState
 
 @export var ground_state: PlayerState
-@export var attack_timer: Timer
 
 var attack_type: String
+var attack: bool = false
+
+var frames_counter: float
+var startup_frames: float
+var active_frames: float
+
+var frame_time := 1.0 / 60.0
+var accumulator := 0.0
+
+var start_up_end: bool
 
 func on_enter() -> void:
-	attack_timer.start()
+	frames_counter = 0
 
 	if attack_type == "l_attack_1":
 		bg_light_grab()
 
-func _on_attack_timer_timeout() -> void:
-	attack_timer.stop()
-	next_state = ground_state
+	if attack_type == "l_attack_2":
+		bg_light_grab()
+
+func state_process(_delta):
+	accumulator += _delta
+
+	while accumulator >= frame_time:
+		accumulator -= frame_time
+		frames_counter += 1
+	
+	if attack_type == "l_attack_1":
+		if frames_counter == startup_frames and not start_up_end:
+			start_up_end = true
+			frames_counter = 0
+			attack = true
+			character.velocity.x = 500 if character.is_facing_right else -500
+			character.velocity.y = -150
+			character.velocity.y += -1700 * _delta
+
+		if frames_counter == active_frames and start_up_end:
+			start_up_end = false
+			frames_counter = 0
+			next_state = ground_state
+	
+	if attack_type == "l_attack_2":
+		if frames_counter == startup_frames and not start_up_end:
+			start_up_end = true
+			frames_counter = 0
+			attack = true
+			character.velocity.x = 500 if character.is_facing_right else -500
+			character.velocity.y = -450
+			character.velocity.y += -1700 * _delta
+
+		if frames_counter == active_frames and start_up_end:
+			start_up_end = false
+			frames_counter = 0
+			next_state = ground_state
+			character.velocity.x = 0
+			character.velocity.y = 0
+	
 
 # Big guy moveset
 func bg_light_grab():
-	attack_timer.wait_time = 0.2
-	character.velocity.x = 200 if character.is_facing_right else -200
+	playback.travel("grab_startup")
+	character.velocity.x = 0

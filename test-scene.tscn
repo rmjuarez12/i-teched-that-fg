@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dgfhfviuhyq4g"]
+[gd_scene load_steps=6 format=3 uid="uid://dgfhfviuhyq4g"]
 
 [ext_resource type="PackedScene" uid="uid://b42is2rsq8282" path="res://scenes/Player/Player.tscn" id="1_0411k"]
 [ext_resource type="Texture2D" uid="uid://dkq2dhpssbxob" path="res://icon.svg" id="2_wn8ut"]
 [ext_resource type="PackedScene" uid="uid://dqxxj30jhla8e" path="res://scenes/GameManagementScenes/GameManager/game_manager.tscn" id="3_8amj3"]
+[ext_resource type="AudioStream" uid="uid://16je8828o2jp" path="res://assets/The Battle of Atheria.ogg" id="4_c5pbs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8amj3"]
 size = Vector2(127, 120)
@@ -10,16 +11,16 @@ size = Vector2(127, 120)
 [node name="Node2D" type="Node2D"]
 
 [node name="Player1" parent="." instance=ExtResource("1_0411k")]
-position = Vector2(124, 153)
+position = Vector2(70, 239)
 character_name = "Brickhouse Bruno"
 
 [node name="Player2" parent="." instance=ExtResource("1_0411k")]
-position = Vector2(224, 153)
+position = Vector2(506, 237)
 character_name = "Brickhouse Bruno"
 is_player_one = false
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
-position = Vector2(372, 247)
+position = Vector2(318, 333)
 scale = Vector2(5, 0.5)
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
@@ -34,3 +35,7 @@ shape = SubResource("RectangleShape2D_8amj3")
 [node name="Camera2D" type="Camera2D" parent="."]
 limit_left = 0
 limit_top = 0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("4_c5pbs")

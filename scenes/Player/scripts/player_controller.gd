@@ -27,7 +27,8 @@ const p1Inputs: Dictionary = {
   "back": "p1_back",
 	"up": "p1_up",
 	"down": "p1_down",
-	"l": "p1_L"
+	"l": "p1_L",
+	"m": "p1_M"
 }
 
 const p2Inputs: Dictionary = {
@@ -35,7 +36,8 @@ const p2Inputs: Dictionary = {
   "back": "p2_back",
 	"up": "p2_up",
 	"down": "p2_down",
-	"l": "p2_L"
+	"l": "p2_L",
+	"m": "p2_M"
 }
 
 var player_inputs: Dictionary = {}
@@ -60,6 +62,7 @@ var motion_inputs: Dictionary = {
 
 	# Monstrosity
 	"Pretzel": [1, 6, 3, 2, 1, 4, 3],
+	"Konami": [8, 8, 2, 2, 4, 6, 4, 6],
 
 	# Charge
 	"CHARGE_BF": { "charge":4, "release":6, "time":0.6 },
@@ -76,7 +79,7 @@ var last_dir := 5
 
 # Input buffering
 var input_buffer: Array = []
-var buffer_timer:float = 0.5
+var buffer_timer:float = 1
 var curr_directional_input:  int = 0
 var prev_directional_input:  int = 0
 @onready var buffering_timer = $InputBufferTimer
@@ -180,7 +183,8 @@ func get_directional_input():
 func get_normal_input():
 	var input_str := ""
 
-	if Input.is_action_just_pressed(player_inputs.l): input_str = "L"
+	if Input.is_action_pressed(player_inputs.l): input_str = "A"
+	if Input.is_action_pressed(player_inputs.m): input_str = "B"
 
 	return input_str
 
@@ -227,10 +231,10 @@ func match_charge(motion_name: String) -> bool:
 # as dashes and down down
 func match_double_input() -> bool:
 	var last_time = null
-	var threshold := 120 
+	var threshold := 100 
 
 	for entry in input_buffer:
-		if entry.dir == 6 or entry.dir == 4:
+		if entry.dir == 4:
 			if last_time == null:
 				last_time = entry.time
 			else:
@@ -246,18 +250,24 @@ func dispatch_actions():
 	if match_motion(motion_inputs["Pretzel"]):
 		return "Pretzel"
 
+	if match_motion(motion_inputs["Konami"]):
+		return "Konami"
+
 	# -------- SPECIAL PRIORITY --------
 	if match_motion(motion_inputs["DP"]):
-			return "DP"
+		return "DP"
 
+	if match_motion(motion_inputs["QCB"]):
+		return "QCB"
+	
 	if match_motion(motion_inputs["QCF"]):
-			return "QCF"
+		return "QCF"
 
 	if match_charge("CHARGE_BF"):
-			return "SONIC_BOOM"
+		return "SONIC_BOOM"
 
 	# -------- DASH (lower priority) --------
 	if match_double_input():
-			return "DASH"
+		return "DASH"
 
 	return ""
