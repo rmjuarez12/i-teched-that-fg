@@ -17,7 +17,6 @@ character_name = "Brickhouse Bruno"
 [node name="Player2" parent="." instance=ExtResource("1_0411k")]
 position = Vector2(506, 237)
 character_name = "Brickhouse Bruno"
-is_player_one = false
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(318, 333)

@@ -6,6 +6,9 @@ class_name PlayerStateMachine
 @export var current_state : PlayerState
 @export var animation_tree : AnimationTree
 
+@export var forward_dash : PlayerState
+@export var back_dash : PlayerState
+
 var states : Array[PlayerState]
 
 #For testing

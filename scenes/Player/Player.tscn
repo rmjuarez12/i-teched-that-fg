@@ -326,10 +326,8 @@ _data = {
 &"walk": SubResource("Animation_8djf2")
 }
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("player_hitboxes", "player_hurtboxes")]
+[node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_ky53y")
-player_hitboxes = NodePath("HitBoxes")
-player_hurtboxes = NodePath("HurtBoxes")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_tl8lu")
@@ -346,11 +344,13 @@ offset_right = 19.0
 offset_bottom = -61.0
 text = "Input"
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("player_character", "current_state", "animation_tree", "state_label")]
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("player_character", "current_state", "animation_tree", "forward_dash", "back_dash", "state_label")]
 script = ExtResource("3_ved6o")
 player_character = NodePath("..")
 current_state = NodePath("Ground")
-animation_tree = NodePath("../BigGuyAnim/BGAnimationTree")
+animation_tree = NodePath("../BigGuyResources/BGAnimationTree")
+forward_dash = NodePath("ForwardDash")
+back_dash = NodePath("BackDash")
 state_label = NodePath("../Label")
 
 [node name="Ground" type="Node" parent="StateMachine" node_paths=PackedStringArray("jump_state", "attack_state", "falling_state", "f_dash_state", "b_dash_state")]
@@ -394,15 +394,15 @@ ground_state = NodePath("../Ground")
 can_move = false
 metadata/_custom_type_script = "uid://dc1su2sa0sebm"
 
-[node name="BigGuyAnim" type="Node" parent="."]
+[node name="BigGuyResources" type="Node" parent="."]
 
-[node name="BGAnimationTree" type="AnimationTree" parent="BigGuyAnim"]
+[node name="BGAnimationTree" type="AnimationTree" parent="BigGuyResources"]
 root_node = NodePath(".")
 tree_root = SubResource("AnimationNodeStateMachine_socpp")
 anim_player = NodePath("../BGAnimationPlayer")
 parameters/Move/blend_position = 0
 
-[node name="BGAnimationPlayer" type="AnimationPlayer" parent="BigGuyAnim"]
+[node name="BGAnimationPlayer" type="AnimationPlayer" parent="BigGuyResources"]
 root_node = NodePath("../BGAnimationTree")
 libraries = {
 &"": SubResource("AnimationLibrary_qt7jd")

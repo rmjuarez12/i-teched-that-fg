@@ -54,7 +54,7 @@ func add_to_history(directional_input: int, normal_input: String, player_one: bo
 			if player_1_history.size() > 15:
 				player_1_history.pop_front()
 			
-			if player_1_last_directional_input != 0:
+			if player_1_last_directional_input != 5:
 				player_1_history.append(str(arrow_ref))
 		
 		if normal_input != player_1_last_normal_input:
@@ -69,7 +69,7 @@ func add_to_history(directional_input: int, normal_input: String, player_one: bo
 			if player_2_history.size() > 15:
 				player_2_history.pop_front()
 
-			if player_2_last_directional_input != 0:
+			if player_2_last_directional_input != 5:
 				player_2_history.append(str(arrow_ref))
 		
 		if normal_input != player_2_last_normal_input:

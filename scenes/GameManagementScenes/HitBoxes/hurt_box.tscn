@@ -14,6 +14,7 @@ shape = SubResource("RectangleShape2D_v0jxm")
 debug_color = Color(0.185825, 0.555695, 0.860575, 0.42)
 
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 modulate = Color(0, 1, 1, 0.372549)
 offset_left = -10.0
 offset_top = -10.0

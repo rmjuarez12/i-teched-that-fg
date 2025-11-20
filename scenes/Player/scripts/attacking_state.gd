@@ -57,8 +57,7 @@ func state_process(_delta):
 			start_up_end = false
 			frames_counter = 0
 			next_state = ground_state
-			character.velocity.x = 0
-			character.velocity.y = 0
+			character.velocity = Vector2.ZERO
 	
 
 # Big guy moveset
